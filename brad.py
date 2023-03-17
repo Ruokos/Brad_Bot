@@ -15,13 +15,13 @@ bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
 @bot.event
 async def on_ready():
-    print("Hallo, Brad is hier!")
+    print("Hello, Brad has arrived!")
     channel = bot.get_channel(CHANNEL_ID)
-    await channel.send("Hallo, Brad is hier!")
+    await channel.send("Hello, Brad has arrived!")
 
 @bot.command()
 async def brad(ctx):
-    await ctx.send("Ik ben Brad")
+    await ctx.send("I am Brad")
 
 
 bot.run(TOKEN)
