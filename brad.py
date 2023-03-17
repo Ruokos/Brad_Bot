@@ -17,11 +17,14 @@ bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 async def on_ready():
     print("Hello, Brad has arrived!")
     channel = bot.get_channel(CHANNEL_ID)
-    await channel.send("Hello, Brad has arrived!")
+    await channel.send("Hello, Brad has arrived!\n Type '!helpme' to see what commands you can use.")
 
 @bot.command()
 async def brad(ctx):
     await ctx.send("I am Brad")
 
+@bot.command()
+async def helpme(ctx):
+    await ctx.send("I abide by these commands:\n!brad\n!helpme")
 
 bot.run(TOKEN)
