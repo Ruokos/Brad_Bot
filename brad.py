@@ -24,7 +24,17 @@ async def brad(ctx):
     await ctx.send("I am Brad")
 
 @bot.command()
+async def sum(ctx, *arr):
+    result = 0
+    for i in arr:
+        result += int(i)
+    await ctx.send(f'Result: {result}')
+
+
+@bot.command()
 async def helpme(ctx):
-    await ctx.send("I abide by these commands:\n!brad\n!helpme")
+    await ctx.send("I abide by these commands:\n!brad\n!helpme\n!sum")
+
+
 
 bot.run(TOKEN)
