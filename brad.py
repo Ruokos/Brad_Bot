@@ -44,8 +44,27 @@ async def calc(ctx, *arr):
 
 @bot.command()
 async def helpme(ctx):
-    await ctx.send("I abide by these commands:\n!brad\n!helpme\n!sum")
+    await ctx.send("I abide by these commands:\n!brad\n!helpme\n!calc\n!sex\n\nIf you want info on the syntax of these commands, type '!help<command>'.")
 
+@bot.command()
+async def helpcalc(ctx):
+    await ctx.send("!calc <operator> <numbers spaced by blank spaces>")
 
+@bot.command()
+async def helpbrad(ctx):
+    await ctx.send("!brad")
+
+@bot.command()
+async def helphelpme(ctx):
+    await ctx.send("!helpme")
+
+@bot.command()
+async def helpsex(ctx):
+    await ctx.send("!sex")
+
+@bot.command()
+async def sex(ctx):
+    user = message.author
+    await ctx.send("*Has sex with", user, "*")
 
 bot.run(TOKEN)
