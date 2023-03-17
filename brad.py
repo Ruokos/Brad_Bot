@@ -24,19 +24,19 @@ async def brad(ctx):
     await ctx.send("I am Brad")
 
 @bot.command()
-async def sum(ctx, *arr):
-    result = 0
+async def calc(ctx, *arr):
+    result = int(arr[1])
     if arr[0] == "+":
-        for i in arr[1:]:
+        for i in arr[2:]:
             result += int(i)
     elif arr[0] == "/":
-        for i in arr[1:]:
+        for i in arr[2:]:
             result /= int(i)
     elif arr[0] == "*":
-        for i in arr[1:]:
+        for i in arr[2:]:
             result *= int(i)
     elif arr[0] == "-":
-        for i in arr[1:]:
+        for i in arr[2:]:
             result -= int(i)
     await ctx.send(f'Result: {result}')
 
