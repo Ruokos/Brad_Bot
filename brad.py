@@ -1,15 +1,16 @@
 import discord
-from discord.ext import commands
 
-def main():
+from dotenv import load_dotenv
 
-    bot = commands.Bot(command_prefix='!', token='MTA4NjI4MzIxNTgxMzIxODM3NQ.Gln0Yn.xght6qFSImPqEe0idBJJiHgX7dAVz4-OfyvHFE')
+intents = discord.Intents.default()
 
-    @bot.command()
-    async def hello(ctx):
-        await ctx.send('Hello!')
+load_dotenv()
+TOKEN = "MTA4NjI4MzIxNTgxMzIxODM3NQ.Gln0Yn.xght6qFSImPqEe0idBJJiHgX7dAVz4-OfyvHFE" 
 
-    bot.run('MTA4NjI4MzIxNTgxMzIxODM3NQ.Gln0Yn.xght6qFSImPqEe0idBJJiHgX7dAVz4-OfyvHFE')
+client = discord.Client(intents=intents)
+    
+@client.event
+async def on_ready():
+    print(f'{client.user} is verbonden met Discord!')
 
-if __name__ == "__main__":
-    main()
+client.run(TOKEN)
