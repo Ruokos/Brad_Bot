@@ -26,9 +26,20 @@ async def brad(ctx):
 @bot.command()
 async def sum(ctx, *arr):
     result = 0
-    for i in arr:
-        result += int(i)
+    if arr[0] == "+":
+        for i in arr[1:]:
+            result += int(i)
+    elif arr[0] == "/":
+        for i in arr[1:]:
+            result /= int(i)
+    elif arr[0] == "*":
+        for i in arr[1:]:
+            result *= int(i)
+    elif arr[0] == "-":
+        for i in arr[1:]:
+            result -= int(i)
     await ctx.send(f'Result: {result}')
+
 
 
 @bot.command()
