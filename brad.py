@@ -114,44 +114,47 @@ async def chuck(ctx):
 
 
 @bot.command()
-async def aita(ctx):
-    df = pd.DataFrame()
-    user_agent = "Brad de meme verzamelaar"
+async def aita(ctx, arg1):
+    arg1 = str(arg1)
+    if arg1 not in ["hot", "new", "top"]:
+        await ctx.send("Je hebt niet een geldige parameter gekozen voor !aita")
+        return
+    else:
+        df = pd.DataFrame()
+        user_agent = "Brad de meme verzamelaar"
 
-    reddit = praw.Reddit(username="BradBotTheGoat", password="g!5$#TH$5!o@^aZmwrR@T3gH3&554^", client_id="eE_SvO-n5PmS4TjUg4qcDA", client_secret="AsvWTEPb5ZaACgprvHF_dBk3yT1Szg", user_agent=user_agent)
-    subreddit_name = "AmItheAsshole"
-    subreddit = reddit.subreddit(subreddit_name)
+        reddit = praw.Reddit(username="BradBotTheGoat", password="g!5$#TH$5!o@^aZmwrR@T3gH3&554^", client_id="eE_SvO-n5PmS4TjUg4qcDA", client_secret="AsvWTEPb5ZaACgprvHF_dBk3yT1Szg", user_agent=user_agent)
+        subreddit_name = "AmItheAsshole"
+        subreddit = reddit.subreddit(subreddit_name)
+        if arg1 == "hot":
+            submissions = subreddit.hot(limit=50)
+        elif arg1 == "new":
+            submissions = subreddit.new(limit=50)
+        elif arg1 == "top":
+            submissions = subreddit.top(limit=50)
+        df = pd.DataFrame([{'title': s.title, 'selftext': s.selftext, 'upvote_ratio': s.upvote_ratio} for s in submissions])
+        randompost = df.iloc[random.randint(0, 50)]
+        randompost_title = randompost.loc['title']
+        randompost_content = randompost.loc['selftext']
+
+        await ctx.send(f'Deze post komt van de top 50 uit {arg1.upper()}')
+        await ctx.send(f'Titel: {randompost_title}')
+        if len(randompost_content) == 0:
+            await ctx.send("Deze post had geen content")
     
-    submissions= subreddit.hot(limit=50)
-    df = pd.DataFrame([{'title': s.title, 'selftext': s.selftext, 'upvote_ratio': s.upvote_ratio} for s in submissions])
-    print(df)
-
-    randompost = df.iloc[random.randint(0, 50)]
-    randompost_title = randompost.loc['title']
-    randompost_content = randompost.loc['selftext']
-    
-    # relative_path = "temp\\message.txt"
-    # message_path = os.path.join(ABSOLUTE_PATH, relative_path)
-    # text_file = open(message_path, 'w')
-    # _ = text_file.write(randompost_content)
-    # text_file.close()
-
-    await ctx.send(f'Titel: {randompost_title}')
-    if len(randompost_content) == 0:
-        await ctx.send("Deze post had geen content")
-    
-    while len(randompost_content) > 0:
-        if len(randompost_content) > 2000:
-            await ctx.send(randompost_content[:2000])
-            randompost_content = randompost_content[2000:]
-        else:
-            await ctx.send(randompost_content)
-            randompost_content = ""
-    await ctx.send(f"Deze post heeft een upvote ratio van {randompost.loc['upvote_ratio']} ")
-    # await ctx.send(file=discord.File(message_path))
+        while len(randompost_content) > 0:
+            if len(randompost_content) > 2000:
+                await ctx.send(randompost_content[:2000])
+                randompost_content = randompost_content[2000:]
+            else:
+                await ctx.send(randompost_content)
+                randompost_content = ""
+        await ctx.send(f"Deze post heeft een upvote ratio van {randompost.loc['upvote_ratio']} ")
 
 
-
+@bot.command()
+async def helpaita(ctx):
+    await ctx.send("Doe !aita <hot> <new> <top> <")
 
 
 bot.run(TOKEN)
