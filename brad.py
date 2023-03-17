@@ -64,7 +64,6 @@ async def helpsex(ctx):
 
 @bot.command()
 async def sex(ctx):
-    user = message.author
-    await ctx.send("*Has sex with", user, "*")
+    await ctx.send(f"*Has sex with {ctx.message.author.mention}*",)
 
 bot.run(TOKEN)
