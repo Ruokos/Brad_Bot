@@ -1,4 +1,4 @@
-import discord, os, requests, json, praw, pandas as pd, random
+import discord, os, requests, json, praw, pandas as pd, random, openai
 
 
 
@@ -11,6 +11,7 @@ COMMAND_PREFIX = '!'
 CHANNEL_ID = 690107427663904905 #Algemeen van de BRUHHHHH discord server
 load_dotenv() #Laad de token van de BOT in
 TOKEN = os.environ["TOKEN"]
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 intents = discord.Intents.all()
 
 
@@ -127,17 +128,17 @@ async def aita(ctx, arg1):
         subreddit_name = "AmItheAsshole"
         subreddit = reddit.subreddit(subreddit_name)
         if arg1 == "hot":
-            submissions = subreddit.hot(limit=50)
+            submissions = subreddit.hot(limit=25)
         elif arg1 == "new":
-            submissions = subreddit.new(limit=50)
+            submissions = subreddit.new(limit=25)
         elif arg1 == "top":
-            submissions = subreddit.top(limit=50)
+            submissions = subreddit.top(limit=25)
         df = pd.DataFrame([{'title': s.title, 'selftext': s.selftext, 'upvote_ratio': s.upvote_ratio} for s in submissions])
-        randompost = df.iloc[random.randint(0, 50)]
+        randompost = df.iloc[random.randint(0, 25)]
         randompost_title = randompost.loc['title']
         randompost_content = randompost.loc['selftext']
 
-        await ctx.send(f'Deze post komt van de top 50 uit {arg1.upper()}')
+        await ctx.send(f'Deze post komt uit de top 25 van de categorie {arg1.upper()}')
         await ctx.send(f'Titel: {randompost_title}')
         if len(randompost_content) == 0:
             await ctx.send("Deze post had geen content")
@@ -155,6 +156,29 @@ async def aita(ctx, arg1):
 @bot.command()
 async def helpaita(ctx):
     await ctx.send("Doe !aita <hot> <new> <top> <")
+
+@bot.command()
+async def ai(ctx, *, message):
+   with open('openai_prompt.txt', encoding="utf8") as f:
+    prompt = f.read()
+   if len(message) >= 100:
+       ctx.send("Je moet niet teveel karakters invoeren! 50 is het limiet!")
+   else:
+    openai.api_key = OPENAI_API_KEY
+    response = openai.ChatCompletion.create(
+        model = "gpt-3.5-turbo",
+        max_tokens = 1500,
+        messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": message }
+        ]
+    )
+    chatgpt_response = response['choices'][0]['message']['content']
+    await ctx.send(f"{chatgpt_response}")
+
+@bot.command()
+async def helpai(ctx):
+    ctx.send("!ai <vraag>")
 
 
 bot.run(TOKEN)

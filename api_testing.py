@@ -1,7 +1,3 @@
-response = requests.get("https://api.chucknorris.io/jokes/random")
-response_text = response.text
-dict = json.loads(response_text)
-joke = dict['value']
-
-
+with open('dan_prompt.txt') as f:
+    lines = f.readlines()
 
