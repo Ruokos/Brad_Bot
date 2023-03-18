@@ -161,13 +161,13 @@ async def helpaita(ctx):
 async def ai(ctx, *, message):
    with open('openai_prompt.txt', encoding="utf8") as f:
     prompt = f.read()
-   if len(message) >= 100:
-       ctx.send("Je moet niet teveel karakters invoeren! 50 is het limiet!")
+   if len(message) >= 200:
+       ctx.send("Je moet niet teveel karakters invoeren! 200 is het limiet!")
    else:
     openai.api_key = OPENAI_API_KEY
     response = openai.ChatCompletion.create(
         model = "gpt-3.5-turbo",
-        max_tokens = 1500,
+        max_tokens = 2000,
         messages = [
         {"role": "system", "content": prompt},
         {"role": "user", "content": message }
@@ -180,5 +180,8 @@ async def ai(ctx, *, message):
 async def helpai(ctx):
     ctx.send("!ai <vraag>")
 
+@bot.command()
+async def behemoth(ctx):
+    await ctx.send('https://www.youtube.com/watch?v=eY6ocewfCc0')
 
 bot.run(TOKEN)
