@@ -184,4 +184,8 @@ async def helpai(ctx):
 async def behemoth(ctx):
     await ctx.send('https://www.youtube.com/watch?v=eY6ocewfCc0')
 
+@bot.command()
+async def git(ctx):
+    await ctx.send("De link naar de GitHub repository is: https://github.com/Ruokos/Brad_Bot")
+
 bot.run(TOKEN)
