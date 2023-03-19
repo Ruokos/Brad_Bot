@@ -164,6 +164,7 @@ async def ai(ctx, *, message):
    if len(message) >= 200:
        ctx.send("Je moet niet teveel karakters invoeren! 200 is het limiet!")
    else:
+    print('Started with an OpenAI request')
     openai.api_key = OPENAI_API_KEY
     response = openai.ChatCompletion.create(
         model = "gpt-3.5-turbo",
@@ -175,6 +176,7 @@ async def ai(ctx, *, message):
     )
     chatgpt_response = response['choices'][0]['message']['content']
     await ctx.send(f"{chatgpt_response}")
+    print('Done sending OpenAI request')
 
 @bot.command()
 async def helpai(ctx):
