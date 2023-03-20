@@ -24,6 +24,11 @@ ABSOLUTE_PATH = os.path.dirname(__file__)
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
 
+openai.api_key = OPENAI_API_KEY
+with open('openai_prompt.txt', encoding="utf8") as f:
+    prompt = f.read()
+
+
 
 @bot.event
 async def on_ready():
@@ -159,15 +164,12 @@ async def helpaita(ctx):
 
 @bot.command()
 async def ai(ctx, *, message):
-   with open('openai_prompt.txt', encoding="utf8") as f:
-    prompt = f.read()
    if len(message) >= 200:
        ctx.send("Je moet niet teveel karakters invoeren! 200 is het limiet!")
    else:
     user_name_prompt = f"My name is {str(ctx.message.author)[:-5]}. Please adress me with my name during our conversation"
     print('Started with an OpenAI request')
     print(f'Naam user: {ctx.message.author}')
-    openai.api_key = OPENAI_API_KEY
     response = openai.ChatCompletion.create(
         model = "gpt-3.5-turbo",
         max_tokens = 2000,
@@ -180,6 +182,29 @@ async def ai(ctx, *, message):
     chatgpt_response = response['choices'][0]['message']['content']
     await ctx.send(f"{chatgpt_response}")
     print('Done sending OpenAI request')
+
+
+
+@bot.command()
+async def summarise(ctx):
+    history_prompt = "The history of this chat went as following:"
+    async for msg in ctx.channel.history(limit=75):
+        if msg.author.bot:
+            pass
+        else:
+            history_prompt = history_prompt + f"{msg.author.name} said: {msg.content} "
+            print(history_prompt)
+    response = openai.ChatCompletion.create(
+        model = "gpt-3.5-turbo",
+        max_tokens = 2000,
+        messages = [
+        {"role": "system", "content": history_prompt},
+        {"role": "user", "content": 'Can you summarise the history of the chat for me? Try and respond in the language that is mainly being used in the history of the chat'}
+            ]
+        )
+    chatgpt_response = response['choices'][0]['message']['content']
+    await ctx.send(f"{chatgpt_response}")
+
 
 @bot.command()
 async def helpai(ctx):
