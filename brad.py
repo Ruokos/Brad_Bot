@@ -164,13 +164,16 @@ async def ai(ctx, *, message):
    if len(message) >= 200:
        ctx.send("Je moet niet teveel karakters invoeren! 200 is het limiet!")
    else:
+    user_name_prompt = f"My name is {str(ctx.message.author)[:-5]}. Please adress me with my name during our conversation"
     print('Started with an OpenAI request')
+    print(f'Naam user: {ctx.message.author}')
     openai.api_key = OPENAI_API_KEY
     response = openai.ChatCompletion.create(
         model = "gpt-3.5-turbo",
         max_tokens = 2000,
         messages = [
         {"role": "system", "content": prompt},
+        {"role": "user", "content": user_name_prompt},
         {"role": "user", "content": message }
         ]
     )
