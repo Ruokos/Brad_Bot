@@ -186,20 +186,26 @@ async def ai(ctx, *, message):
 
 
 @bot.command()
-async def summarise(ctx):
+async def summarise(ctx, message_count):
+    if not message_count.isdigit():
+        return 
+    message_count = int(message_count)
+    if message_count > 40:
+        await ctx.send(f"Je mag niet meer dan 40 oude berichten laten samenvatten door BradBot")
+        return
     history_prompt = "The history of this chat went as following:"
-    async for msg in ctx.channel.history(limit=75):
-        if msg.author.bot:
+    async for msg in ctx.channel.history(limit=message_count):
+        if msg.author.bot or "!ai" in msg.content or "!summarise" in msg.content:
             pass
         else:
-            history_prompt = history_prompt + f"{msg.author.name} said: {msg.content} "
-            print(history_prompt)
+            prompt_input = f"{msg.author.name} said: {msg.content}"
+            history_prompt = history_prompt + prompt_input 
     response = openai.ChatCompletion.create(
         model = "gpt-3.5-turbo",
         max_tokens = 2000,
         messages = [
         {"role": "system", "content": history_prompt},
-        {"role": "user", "content": 'Can you summarise the history of the chat for me? Try and respond in the language that is mainly being used in the history of the chat'}
+        {"role": "user", "content": 'Can you summarise the history of the chat for me?'}
             ]
         )
     chatgpt_response = response['choices'][0]['message']['content']
